@@ -1,36 +1,842 @@
-<div class="m-5 col-xl-12 col-md-12 col-sm-12 border-dark">
-  <mat-card>
-    <mat-card-title>
-      <div class="text-center">
-        <div class="container-fluid col-md-8">
-          <a class="navbar-brand h1" style="color: #26221c" href="#"
-            ><b>Gerador de solicitação para atividade</b></a
-          >
+<div class="container">
+  <div class="m-5 col-xl-12 col-md-12 col-sm-12 border-dark">
+    <mat-card>
+      <mat-card-title>
+        <div class="text-center">
+          <div class="container-fluid col-md-8">
+            <a class="navbar-brand h1" style="color: #26221c" href="#"
+              ><b>Gerador de solicitação para atividade</b></a
+            >
+          </div>
         </div>
+      </mat-card-title>
+      <mat-divider></mat-divider>
+      <mat-card-content class="mt-5">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field>
+              <mat-select
+                name="session"
+                [(ngModel)]="selectedSession"
+                [(value)]="selectedSession"
+              >
+                <mat-option [value]="' '"></mat-option>
+                <mat-option
+                  *ngFor="let session of sessions"
+                  [value]="session"
+                  >{{ session }}</mat-option
+                >
+              </mat-select>
+              <mat-label>Sessão</mat-label>
+            </mat-form-field>
+          </div>
+          <div class="col-md-7">
+            <mat-form-field appearance="fill">
+              <mat-label>Chefe responsável</mat-label>
+              <input matInput [(ngModel)]="responsible" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <ng-select
+              [(ngModel)]="selectedActivityType"
+              [clearable]="false"
+              placeholder="Tipo de atividade"
+            >
+              <ng-option
+                *ngFor="let activity of activitiesList"
+                [value]="activity"
+                >{{ activity }}</ng-option
+              >
+            </ng-select>
+          </div>
+          <div
+            class="col-md-2"
+            *ngIf="selectedActivityType == 'At. Comunitária'"
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>Beneficiados</mat-label>
+              <input matInput [(ngModel)]="benefited" type="number" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="fill">
+              <mat-label>Objetivo da atividade</mat-label>
+              <input matInput [(ngModel)]="objective" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Nome do local</mat-label>
+            <input matInput [(ngModel)]="placeName" />
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Endereço</mat-label>
+            <input matInput [(ngModel)]="address" />
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="row">
+          <div class="row mt-2">
+            <mat-card class="mt-4 col-md-6 bg-blue">
+              <mat-card-title>
+                <div class="text-center">
+                  <div class="container-fluid col-md-8">
+                    <a class="navbar-brand h3" style="color: #26221c" href="#"
+                      ><b>Saída</b></a
+                    >
+                  </div>
+                </div>
+              </mat-card-title>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field color="accent" appearance="fill">
+                      <mat-label>Data Saída</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="outDatePicker"
+                        (dateChange)="setOutDate($event)"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="outDatePicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker
+                        #outDatePicker
+                        color="primary"
+                      ></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <span>Hora Saída</span>
+                    <br />
+                    <p-inputMask
+                      [(ngModel)]="outHour"
+                      mask="99:99"
+                    ></p-inputMask>
+                  </div>
+                  <div class="col-md-6">
+                    <ng-select
+                      [(ngModel)]="outTransportation"
+                      [clearable]="false"
+                      placeholder="Transporte"
+                    >
+                      <ng-option
+                        *ngFor="let transport of transportMode"
+                        [value]="transport"
+                        >{{ transport }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mt-4 col-md-6 bg-blue">
+              <mat-card-title>
+                <div class="text-center">
+                  <div class="container-fluid col-md-8">
+                    <a class="navbar-brand h3" style="color: #26221c" href="#"
+                      ><b>Chegada</b></a
+                    >
+                  </div>
+                </div>
+              </mat-card-title>
+              <mat-card-content>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field color="accent" appearance="fill">
+                      <mat-label>Data Chegada</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="returnDatePicker"
+                        (dateChange)="setReturnDate($event)"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="returnDatePicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker
+                        #returnDatePicker
+                        color="primary"
+                      ></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <span>Hora Chegada</span>
+                    <br />
+                    <p-inputMask
+                      [(ngModel)]="returnHour"
+                      mask="99:99"
+                    ></p-inputMask>
+                  </div>
+                  <div class="col-md-6">
+                    <ng-select
+                      [(ngModel)]="returnTransportation"
+                      [clearable]="false"
+                      placeholder="Transporte"
+                    >
+                      <ng-option
+                        *ngFor="let transport of transportMode"
+                        [value]="transport"
+                        >{{ transport }}</ng-option
+                      >
+                    </ng-select>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <mat-form-field appearance="fill">
+              <mat-label>N. de participantes</mat-label>
+              <input matInput [(ngModel)]="participantsNumber" type="number" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <mat-card class="mt-4 col-md-6 bg-blue">
+            <mat-card-title>
+              <div class="text-center">
+                <div class="container-fluid col-md-8">
+                  <a class="navbar-brand h3" style="color: #26221c" href="#"
+                    ><b>Chefes</b></a
+                  >
+                </div>
+              </div>
+            </mat-card-title>
+            <mat-card-content>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nome do Chefe</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="tempLeaderName"
+                      (keyup.enter)="addLeader()"
+                    />
+                  </mat-form-field>
+                  <button
+                    mat-flat-button
+                    class="btn-success"
+                    (click)="addLeader()"
+                  >
+                    Adicionar <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <table
+                    mat-table
+                    [dataSource]="leaderDataSource"
+                    class="text-center"
+                  >
+                    <ng-container matColumnDef="Nome">
+                      <th mat-header-cell *matHeaderCellDef class="text-center">
+                        Nome
+                      </th>
+                      <td mat-cell *matCellDef="let leader">
+                        {{ leader.name }}
+                      </td>
+                    </ng-container>
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="displayedLeadersColumns"
+                      class="text-center"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: displayedLeadersColumns"
+                      class="text-center"
+                    ></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="mt-4 col-md-6">
+            <mat-card-title>
+              <div class="text-center">
+                <div class="container-fluid col-md-8">
+                  <a class="navbar-brand h3" style="color: #26221c" href="#"
+                    ><b>Apoios</b></a
+                  >
+                </div>
+              </div>
+            </mat-card-title>
+            <mat-card-content>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nome do Apoio</mat-label>
+                    <input
+                      matInput
+                      [(ngModel)]="tempSupportName"
+                      (keyup.enter)="addSupport()"
+                    />
+                  </mat-form-field>
+                  <button
+                    mat-flat-button
+                    class="btn-success"
+                    (click)="addSupport()"
+                  >
+                    Adicionar <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <table
+                    mat-table
+                    [dataSource]="supportDataSource"
+                    class="text-center"
+                  >
+                    <ng-container matColumnDef="Nome">
+                      <th mat-header-cell *matHeaderCellDef class="text-center">
+                        Nome
+                      </th>
+                      <td mat-cell *matCellDef="let support">
+                        {{ support.name }}
+                      </td>
+                    </ng-container>
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="displayedSupportColumns"
+                      class="text-center"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: displayedSupportColumns"
+                      class="text-center"
+                    ></tr>
+                  </table>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Taxa</mat-label>
+              <input matInput [(ngModel)]="taxes" type="number" step="0.01" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <section>
+              <mat-checkbox
+                class="example-margin"
+                [(ngModel)]="takeFood"
+                [labelPosition]="'after'"
+              >
+                Levar lanche para 1º refeição?
+              </mat-checkbox>
+            </section>
+          </div>
+          <div class="col-md-12">
+            <mat-form-field appearance="fill">
+              <mat-label>Observações adicionais</mat-label>
+              <input matInput [(ngModel)]="notes" />
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="row mt-5">
+          <div class="col-md-3">
+            <span>Programação da atividade</span>
+            <input
+              class="form-control"
+              type="file"
+              (change)="onChangeActivityProgramation($event)"
+              accept="application/pdf"
+            />
+          </div>
+          <div class="col-md-4">
+            <mat-form-field color="accent" appearance="fill">
+              <mat-label>Data Solicitação</mat-label>
+              <input
+                matInput
+                [matDatepicker]="solicitationDatePicker"
+                (dateChange)="setSolicitationDate($event)"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="solicitationDatePicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker
+                #solicitationDatePicker
+                color="primary"
+              ></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-footer>
+        <div class="container">
+          <mat-card-actions align="end">
+            <button
+              mat-button
+              (click)="save()"
+              color="primary"
+              mat-stroked-button
+              mat-raised-button
+            >
+              Guardar informações
+            </button>
+            <button
+              mat-button
+              (click)="generatePDF()"
+              [disabled]="!verifyData()"
+              color="accent"
+              mat-stroked-button
+              mat-raised-button
+            >
+              Salvar arquivo
+            </button>
+          </mat-card-actions>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+<div class="container">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" id="invoice" #invoice>
+    <div class="row">
+      <div class="container col-md-3 text-center">
+        <img
+          src="assets/images/ueb-novo-logo.png"
+          class="image-gray"
+          style="max-height: 200px"
+        />
       </div>
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content class="mt-5">
+      <div class="col-md-6 text-center align-items-end">
+        <h1 class="new-roman">ESCOTEIROS DO BRASIL</h1>
+        <h4 class="new-roman">Região São Paulo</h4>
+        <h1 class="new-roman"><b>GRUPO ESCOTEIRO IRAPUÃ 189º SP</b></h1>
+        <h4 class="new-roman">
+          <b
+            >Rua Dr. Cristiano Altenfelder Silva, 201 - Vila Carrão, São Paulo -
+            SP, 03448-010</b
+          >
+        </h4>
+      </div>
+      <div class="container col-md-3 text-center">
+        <img
+          src="assets/images/irapua_logo.jpg"
+          class="image-gray"
+          style="max-height: 200px"
+        />
+      </div>
+    </div>
+    <div class="container col-md-12 text-center">
+      <h2 class="new-roman">
+        <b>PEDIDO DE AUTORIZAÇÃO PARA ATIVIDADE EXTERNA</b>
+      </h2>
+      <hr
+        style="
+          height: 2px;
+          margin-top: 0;
+          border-top: 1px solid black;
+          border-bottom: 2px solid black;
+        "
+      />
+      <hr
+        style="
+          color: #000;
+          height: 2px;
+          border-top: 1px solid black;
+          border-bottom: 2px solid black;
+          margin-top: -15px;
+        "
+      />
+    </div>
+    <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <mat-form-field>
-            <mat-select name="session" [(value)]="selectedSession">
-              <mat-option></mat-option>
-              <mat-option *ngFor="let session of sessions" [value]="session">{{
-                session
-              }}</mat-option>
-            </mat-select>
-            <mat-label>Sessão</mat-label>
-          </mat-form-field>
+          <h3 class="new-roman" style="display: inline-block">Seção..</h3>
+          &nbsp; &nbsp;
+          <h3
+            class="new-roman"
+            style="text-decoration: underline; display: inline-block"
+          >
+            {{
+              selectedSession
+            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </h3>
         </div>
-        <div class="col-md-7">
-          <mat-form-field appearance="fill">
-            <mat-label>Chefe responsável</mat-label>
-            <input matInput [value]="responsible" />
-          </mat-form-field>
+        <div class="col-md-8">
+          <div class="col-md-8 float-start">
+            <h3 class="new-roman" style="display: inline-block">
+              Chefe responsável pela atividade
+            </h3>
+            &nbsp; &nbsp;
+            <h3
+              class="new-roman"
+              style="text-decoration: underline; display: inline-block"
+            >
+              {{
+                responsible
+              }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h3>
+          </div>
         </div>
       </div>
-      <div class="col-md-4"></div>
-    </mat-card-content>
-  </mat-card>
+      <div class="row">
+        <div class="col-md-4" *ngFor="let event of eventType">
+          <h3 class="new-roman">
+            {{ event }}
+            <ng-container *ngIf="event != selectedActivityType"
+              >(&nbsp;&nbsp;)</ng-container
+            >
+            <ng-container *ngIf="event == selectedActivityType"
+              >(X)</ng-container
+            >
+            <ng-container *ngIf="event == 'At. Comunitária'">
+              <br />
+              quantos são os beneficiados? &nbsp;&nbsp;
+              <h3
+                class="new-roman"
+                style="text-decoration: underline; display: inline-block"
+              >
+                {{ benefited == 0 ? "&nbsp;" : benefited }} &nbsp;&nbsp;
+              </h3></ng-container
+            >
+          </h3>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h3 class="new-roman" style="display: inline-block">
+              Outro tipo de atividade?
+            </h3>
+            &nbsp; &nbsp;
+            <h3
+              class="new-roman"
+              style="text-decoration: underline; display: inline-block"
+            >
+              <ng-container *ngIf="anotherEvents.includes(selectedActivityType)"
+                >{{ selectedActivityType }} </ng-container
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </h3>
+          </div>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <h3 class="new-roman">Objetivo......</h3>
+          </div>
+          <div class="col-md-10 text center">
+            <h3
+              class="new-roman border-bottom border-dark"
+              style="min-width: 100%"
+            >
+              {{ objective }} &nbsp;
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <h3 class="new-roman">Nome do local......</h3>
+          </div>
+          <div class="col-md-10 text center">
+            <h3
+              class="new-roman border-bottom border-dark"
+              style="min-width: 100%"
+            >
+              {{ placeName }} &nbsp;
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <h3 class="new-roman">Endereço......</h3>
+          </div>
+          <div class="col-md-10 text center">
+            <h3
+              class="new-roman border-bottom border-dark"
+              style="min-width: 100%"
+            >
+              {{ address }} &nbsp;
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="container col-md-12 text-center">
+        <hr
+          style="
+            color: #000;
+            height: 1.5px;
+            border-top: 1px solid black;
+            border-bottom: 2px solid black;
+            margin-top: 1px;
+          "
+        />
+      </div>
+      <div class="container col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6">
+                <h3 class="new-roman" style="display: inline-block">
+                  Nº de Participantes..
+                </h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{ participantsNumber }}
+                </h3>
+              </div>
+              <div class="col-md-6">
+                <h3 class="new-roman" style="display: inline-block">
+                  Nº de Chefes..
+                </h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{ leaders.length }}
+                </h3>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-4">
+                <h3 class="new-roman"><b>SAÍDA</b></h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <h3 class="new-roman" style="display: inline-block">Data</h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{ outDate?.toDate() | date: "dd/MM/yyyy" }}
+                </h3>
+              </div>
+              <div class="col-md-4">
+                <h3 class="new-roman" style="display: inline-block">Horário</h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{
+                    outHour
+                  }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </h3>
+              </div>
+              <div class="col-md-12">
+                <h3 class="new-roman" style="display: inline-block">
+                  Transporte
+                </h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{
+                    outTransportation
+                  }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </h3>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-4">
+                <h3 class="new-roman"><b>CHEGADA</b></h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <h3 class="new-roman" style="display: inline-block">Data</h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{ returnDate?.toDate() | date: "dd/MM/yyyy" }}
+                </h3>
+              </div>
+              <div class="col-md-4">
+                <h3 class="new-roman" style="display: inline-block">Horário</h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{
+                    returnHour
+                  }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </h3>
+              </div>
+              <div class="col-md-12">
+                <h3 class="new-roman" style="display: inline-block">
+                  Transporte
+                </h3>
+                &nbsp; &nbsp;
+                <h3
+                  class="new-roman"
+                  style="text-decoration: underline; display: inline-block"
+                >
+                  {{
+                    returnTransportation
+                  }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="col-md-12">
+              <b>Chefes...</b>
+              <div *ngFor="let leader of leaders; let i = index">
+                <div class="row">
+                  <div class="col-md-1 text-end">
+                    <b style="display: inline-block"> {{ i + 1 }}.</b>
+                  </div>
+                  <div class="col-md-11">
+                    <h3
+                      class="new-roman border-bottom border-dark"
+                      style="min-width: 100%; display: inline-block"
+                    >
+                      {{ leader.value }}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="col-md-12">
+              <b>Apoio...</b>
+              <div *ngFor="let support of supports; let i = index">
+                <div class="row">
+                  <div class="col-md-1 text-end">
+                    <b style="display: inline-block"> {{ i + 1 }}.</b>
+                  </div>
+                  <div class="col-md-11">
+                    <h3
+                      class="new-roman border-bottom border-dark"
+                      style="min-width: 100%; display: inline-block"
+                    >
+                      {{ support.value }}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container col-md-12">
+        <div class="col-md-12">
+          <h3 class="new-roman" style="display: inline-block">Taxa...</h3>
+          &nbsp; &nbsp;
+          <h3
+            class="new-roman"
+            style="text-decoration: underline; display: inline-block"
+          >
+            {{
+              formatMoney(taxes)
+            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </h3>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h3 class="new-roman">Levar lanche reforçado p/ 1º refeição?</h3>
+          </div>
+          <div class="col-md-1">
+            <h3 class="new-roman float-start">
+              SIM
+              <ng-container *ngIf="!takeFood">(&nbsp;&nbsp;)</ng-container>
+              <ng-container *ngIf="takeFood">(X)</ng-container>
+            </h3>
+          </div>
+          <div class="col-md-1">
+            <h3 class="new-roman float-start">
+              NÃO <ng-container *ngIf="takeFood">(&nbsp;&nbsp;)</ng-container>
+              <ng-container *ngIf="!takeFood">(X)</ng-container>
+            </h3>
+          </div>
+        </div>
+        <div class="container col-md-12">
+          <h3 class="new-roman" style="display: inline-block">
+            <b>Observações adicionais... </b>
+          </h3>
+          &nbsp; &nbsp;
+          <h3
+            class="new-roman"
+            style="text-decoration: underline; display: inline-block"
+          >
+            {{
+              notes
+            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </h3>
+        </div>
+      </div>
+
+      <div class="container col-md-12 text-center">
+        <hr
+          style="
+            color: #000;
+            height: 1.5px;
+            border-top: 1px solid black;
+            border-bottom: 2px solid black;
+            margin-top: 1px;
+          "
+        />
+      </div>
+      <div class="container col-md-12">
+        <div class="row">
+          <div class="col-md-4">
+            <h3 class="new-roman float-start" style="display: inline-block">
+              Data do pedido...
+            </h3>
+            &nbsp; &nbsp;
+            <h3
+              class="new-roman"
+              style="text-decoration: underline; display: inline-block"
+            >
+              {{ solicitationDate?.toDate() | date: "dd/MM/yyyy" }}
+            </h3>
+          </div>
+          <div class="col-md-8 float-end">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="new-roman">Assinatura do Chefe de seção...</h3>
+                  <br />
+                  <div class="col-md-7 border-bottom border-dark"></div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <h3 class="new-roman">Assinatura do Chefe responsável...</h3>
+                  <br />
+                  <div class="col-md-7 border-bottom border-dark"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

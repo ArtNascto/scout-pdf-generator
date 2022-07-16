@@ -18,8 +18,13 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDividerModule } from '@angular/material/divider';
-import { PdfGeneratedComponent } from './components/pdf-generated/pdf-generated.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { InputMaskModule } from 'primeng/inputmask';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -41,8 +46,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgbModule,
     MatDividerModule,
     NgSelectModule,
+    FormsModule,
+    FontAwesomeModule,
+    MatNativeDateModule,
+    InputMaskModule,
+    MatCheckboxModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent, PdfGeneratedComponent],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

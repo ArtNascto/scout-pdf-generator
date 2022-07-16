@@ -1,7 +1,23 @@
-
-.bg-irapua{
-  background-color: #D99197;
+.bg-irapua {
+  background-color: #d99197;
 }
 mat-form-field {
   width: 100%;
+}
+table.mat-table {
+  table-layout: fixed;
+  width: 100%;
+  display: table;
+}
+mat-card-header .bg-blue {
+  background-color: #89beef;
+  padding: 5px;
+}
+
+mat-card .bg-blue{
+  padding: 0;
+}
+
+mat-card-content .bg-blue{
+  padding: 5px;
 }
