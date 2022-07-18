@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="desktop">
   <div class="m-5 col-xl-12 col-md-12 col-sm-12 border-dark">
     <mat-card>
       <mat-card-title>
@@ -407,7 +407,7 @@
     </mat-card>
   </div>
 </div>
-<div class="container">
+<div class="container" *ngIf="desktop">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" id="invoice" #invoice>
     <div class="row">
       <div class="container col-md-3 text-center">
@@ -840,3 +840,7 @@
     </div>
   </div>
 </div>
+<div class="container" *ngIf="!desktop">
+  <div class="title">Ainda não esta pronta a versão para celular!</div>
+</div>
+<swal #downloadMessage text="Arquivo baixado!" icon="success" confirmButtonText="yey!"></swal>

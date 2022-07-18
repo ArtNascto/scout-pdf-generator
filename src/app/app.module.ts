@@ -24,7 +24,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -51,6 +51,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatNativeDateModule,
     InputMaskModule,
     MatCheckboxModule,
+    SweetAlert2Module.forRoot()
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
 

@@ -1541,6 +1541,18 @@
     "@angular-devkit/schematics" "14.0.6"
     jsonc-parser "3.0.0"
 
+"@sweetalert2/ngx-sweetalert2@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/ngx-sweetalert2/-/ngx-sweetalert2-11.0.0.tgz#7fe051bde0a147347f2cfde446b77a50ccf4e87a"
+  integrity sha512-xbote4s9dkwzyXb+ymhbh0FnT5GtUtk5poEWJzkaRVt+4Nuwyv+E3OgthdcH79l1QwWYWkob8cxMbL31ub5Wcw==
+  dependencies:
+    tslib "^2.0.0"
+
+"@sweetalert2/theme-borderless@^5.0.11":
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/theme-borderless/-/theme-borderless-5.0.11.tgz#865617b63403e2f710d8eaf82323e08acddc7861"
+  integrity sha512-GYT19trxQFZfag+TDZU0K8xB4rqd3bouMXuBET60P342oUKJHDhO56oXKJUjzHYu3JEOAypm8icBLOapypqEQA==
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -4620,6 +4632,13 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+ngx-toastr@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-toastr/-/ngx-toastr-15.0.0.tgz#7d9d664a264b8b39d1bf762bb0a124bde5be8f01"
+  integrity sha512-dseyONSYcbm+8hQUCzzyP6CnHGa8WAOGJN7dzGqgBV4sHCDiv5eZ4x/3uo7Fov2OR0O5T47keP7ND3z7tufXeg==
+  dependencies:
+    tslib "^2.3.0"
+
 nice-napi@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/nice-napi/-/nice-napi-1.0.2.tgz#dc0ab5a1eac20ce548802fc5686eaa6bc654927b"
@@ -6248,6 +6267,11 @@ svg-pathdata@^6.0.3:
   resolved "https://registry.yarnpkg.com/svg-pathdata/-/svg-pathdata-6.0.3.tgz#80b0e0283b652ccbafb69ad4f8f73e8d3fbf2cac"
   integrity sha512-qsjeeq5YjBZ5eMdFuUa4ZosMLxgr5RZ+F+Y1OrDhuOCEInRMA3x74XdBtggJcj9kOeInz0WE+LgCPDkZFlBYJw==
 
+sweetalert2@^11.4.23:
+  version "11.4.23"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.4.23.tgz#a29b1d43bbfd579c1a54952da2a18a8d1a41cf0e"
+  integrity sha512-BfO0gIIHu4SJiixBHpCmd74W+EkORJPX9zy5HLp6vkMAz7RsUED7BhrOBEYrYYgw9nnbxYOwzJDDVPNuK1JQtQ==
+
 symbol-observable@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-4.0.0.tgz#5b425f192279e87f2f9b937ac8540d1984b39205"
@@ -6375,7 +6399,7 @@ tree-kill@1.2.2:
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
-tslib@2.4.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0:
+tslib@2.4.0, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
