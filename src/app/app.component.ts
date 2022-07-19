@@ -365,6 +365,34 @@ export class AppComponent {
     }
   }
   clear() {
+    this.leaderDataSource = new MatTableDataSource<SelectDto>();
+    this.supportDataSource = new MatTableDataSource<SelectDto>();
+    this.objective = '';
+    this.placeName = '';
+    this.address = '';
+    this.participantsNumber = 0;
+    this.supportNumber = 0;
+    this.tempLeaderName = '';
+    this.tempSupportName = '';
+    this.leaders = [];
+    this.supports = [];
+    this.selectedSession = '  ';
+    this.responsible = '';
+    this.selectedActivityType = null;
+    this.outDate = null;
+    this.outHour = '';
+    this.outTransportation = '';
+    this.benefited = 0;
+    this.returnDate = null;
+    this.returnHour = '';
+    this.returnTransportation = '';
+    this.taxes = null;
+    this.takeFood = false;
+    this.notes = '';
+    this.activityProgramation = null;
+    this.activityProgramationBuffer = null;
+    this.solicitationDate = null;
+
     localStorage.clear();
     this.toastr.success('', 'Dados limpos!', {
       enableHtml: true,
