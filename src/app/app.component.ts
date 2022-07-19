@@ -150,8 +150,10 @@ export class AppComponent {
     'Bicicleta',
     'Carro',
     'Ônibus',
-    'Trans. Público',
+    'Metro',
     'Trem',
+    'Trans. Público',
+    'Trans. Público + Carro',
     'Outros',
   ];
   activities: Array<SelectDto> = [];
