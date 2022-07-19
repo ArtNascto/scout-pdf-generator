@@ -100,7 +100,7 @@
                       <input
                         matInput
                         [matDatepicker]="outDatePicker"
-                        (dateChange)="setOutDate($event)"
+                        [(ngModel)]="outDate"
                       />
                       <mat-datepicker-toggle
                         matSuffix
@@ -155,7 +155,7 @@
                       <input
                         matInput
                         [matDatepicker]="returnDatePicker"
-                        (dateChange)="setReturnDate($event)"
+                        [(ngModel)]="returnDate"
                       />
                       <mat-datepicker-toggle
                         matSuffix
@@ -354,6 +354,7 @@
             <input
               class="form-control"
               type="file"
+              id="activity_input"
               (change)="onChangeActivityProgramation($event)"
               accept="application/pdf"
             />
@@ -364,7 +365,7 @@
               <input
                 matInput
                 [matDatepicker]="solicitationDatePicker"
-                (dateChange)="setSolicitationDate($event)"
+                [(ngModel)]="solicitationDate"
               />
               <mat-datepicker-toggle
                 matSuffix
@@ -384,6 +385,15 @@
           <mat-card-actions align="end">
             <button
               mat-button
+              (click)="clear()"
+              class="btn-danger"
+              mat-stroked-button
+              mat-raised-button
+            >
+              Limpar informações
+            </button>
+            <button
+              mat-button
               (click)="save()"
               color="primary"
               mat-stroked-button
@@ -395,7 +405,7 @@
               mat-button
               (click)="generatePDF()"
               [disabled]="!verifyData()"
-              color="accent"
+              class="btn-success"
               mat-stroked-button
               mat-raised-button
             >
@@ -629,7 +639,7 @@
                   class="new-roman"
                   style="text-decoration: underline; display: inline-block"
                 >
-                  {{ outDate?.toDate() | date: "dd/MM/yyyy" }}
+                  {{ outDate | date: "dd/MM/yyyy" }}
                 </h3>
               </div>
               <div class="col-md-4">
@@ -673,7 +683,7 @@
                   class="new-roman"
                   style="text-decoration: underline; display: inline-block"
                 >
-                  {{ returnDate?.toDate() | date: "dd/MM/yyyy" }}
+                  {{ returnDate | date: "dd/MM/yyyy" }}
                 </h3>
               </div>
               <div class="col-md-4">
@@ -814,7 +824,7 @@
               class="new-roman"
               style="text-decoration: underline; display: inline-block"
             >
-              {{ solicitationDate?.toDate() | date: "dd/MM/yyyy" }}
+              {{ solicitationDate | date: "dd/MM/yyyy" }}
             </h3>
           </div>
           <div class="col-md-8 float-end">
@@ -843,4 +853,9 @@
 <div class="container" *ngIf="!desktop">
   <div class="title">Ainda não esta pronta a versão para celular!</div>
 </div>
-<swal #downloadMessage text="Arquivo baixado!" icon="success" confirmButtonText="yey!"></swal>
+<swal
+  #downloadMessage
+  text="Arquivo baixado!"
+  icon="success"
+  confirmButtonText="yey!"
+></swal>

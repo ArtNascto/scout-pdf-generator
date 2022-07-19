@@ -25,6 +25,8 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ToastrModule } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -51,7 +53,16 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     MatNativeDateModule,
     InputMaskModule,
     MatCheckboxModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    CommonModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      maxOpened: 3,
+      progressAnimation: 'decreasing',
+      progressBar: true,
+    }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
 

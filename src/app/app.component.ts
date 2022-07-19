@@ -11,6 +11,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { PDFDocument, PDFPage } from 'pdf-lib';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { ToastrService } from 'ngx-toastr';
+import { NotyfToast } from './notyf.toast';
 
 @Component({
   selector: 'app-root',
@@ -148,6 +150,7 @@ export class AppComponent {
     'Bicicleta',
     'Carro',
     'Ônibus',
+    'Trans. Público',
     'Trem',
     'Outros',
   ];
@@ -173,11 +176,11 @@ export class AppComponent {
   selectedActivityType: any;
   displayedLeadersColumns: string[] = ['Nome'];
   displayedSupportColumns: string[] = ['Nome'];
-  outDate: moment.Moment | null = null;
+  outDate: Date | null = null;
   outHour: string = '';
   outTransportation: string = '';
   benefited: number = 0;
-  returnDate: moment.Moment | null = null;
+  returnDate: Date | null = null;
   returnHour: string = '';
   returnTransportation: string = '';
   taxes: number | null = null;
@@ -187,14 +190,14 @@ export class AppComponent {
   activityProgramation: File | null = null;
   activityProgramationBuffer: any;
 
-  solicitationDate: moment.Moment | null = null;
+  solicitationDate: Date | null = null;
 
   print: boolean = true;
 
   @ViewChild('downloadMessage')
-  downloadMessage!: SwalComponent
+  downloadMessage!: SwalComponent;
 
-  constructor(private _cdr: ChangeDetectorRef) {}
+  constructor(private _cdr: ChangeDetectorRef, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.activitiesList.forEach((activity) => {
@@ -204,6 +207,116 @@ export class AppComponent {
       });
     });
     this.desktop = !this.mobileCheck();
+
+    this.getSavedData();
+  }
+  async getSavedData() {
+    const selected_session = localStorage.getItem('selected_session');
+    if (selected_session) {
+      this.selectedSession = selected_session;
+    }
+
+    const responsible = localStorage.getItem('responsible');
+    if (responsible) {
+      this.responsible = responsible;
+    }
+
+    const selected_activity_type = localStorage.getItem(
+      'selected_activity_type'
+    );
+    if (selected_activity_type) {
+      this.selectedActivityType = selected_activity_type;
+    }
+
+    const objective = localStorage.getItem('objective');
+    if (objective) {
+      this.objective = objective;
+    }
+
+    const place_name = localStorage.getItem('place_name');
+    if (place_name) {
+      this.placeName = place_name;
+    }
+
+    const address = localStorage.getItem('address');
+    if (address) {
+      this.address = address;
+    }
+    const out_date = localStorage.getItem('out_date');
+    if (out_date) {
+      this.outDate = new Date(out_date);
+    }
+
+    const out_transportation = localStorage.getItem('out_transportation');
+    if (out_transportation) {
+      this.outTransportation = out_transportation;
+    }
+
+    const out_hour = localStorage.getItem('out_hour');
+    if (out_hour) {
+      this.outHour = out_hour;
+    }
+
+    const return_date = localStorage.getItem('return_date');
+    if (return_date) {
+      this.returnDate = new Date(return_date);
+    }
+
+    const return_hour = localStorage.getItem('return_hour');
+    if (return_hour) {
+      this.returnHour = return_hour;
+    }
+
+    const return_transportation = localStorage.getItem('return_transportation');
+    if (return_transportation) {
+      this.returnTransportation = return_transportation;
+    }
+
+    const participants_number = localStorage.getItem('participants_number');
+    if (participants_number) {
+      this.participantsNumber = Number.parseInt(participants_number);
+    }
+
+    const leaders = localStorage.getItem('leaders');
+    if (leaders) {
+      this.leaders = JSON.parse(leaders);
+      this.leaderDataSource.data = this.leaders;
+    }
+    const supports = localStorage.getItem('supports');
+    if (supports) {
+      this.supports = JSON.parse(supports);
+      this.supportDataSource.data = this.supports;
+    }
+
+    const solicitation_date = localStorage.getItem('solicitation_date');
+    if (solicitation_date) {
+      this.solicitationDate = new Date(solicitation_date);
+    }
+
+    const taxes = localStorage.getItem('taxes');
+    if (taxes) {
+      this.taxes = Number.parseFloat(taxes);
+    }
+
+    const notes = localStorage.getItem('notes');
+    if (notes) {
+      this.notes = notes;
+    }
+
+    const takeFood = localStorage.getItem('take_food');
+    if (takeFood) {
+      this.takeFood = takeFood == 'true' ? true : false;
+    }
+
+    const activity_programation = localStorage.getItem('activity_programation');
+    if (activity_programation) {
+      this.activityProgramation = await this.base64ToFile(
+        activity_programation
+      );
+      this.activityProgramationBuffer =
+        this.activityProgramation?.arrayBuffer();
+    }
+    this._cdr.detectChanges();
   }
   addLeader() {
     this.leaders.push({
@@ -226,15 +339,15 @@ export class AppComponent {
   }
 
   setOutDate(event: any) {
-    if (event) this.outDate = moment(event.value);
+    if (event) this.outDate = new Date(event.value);
   }
 
   setReturnDate(event: any) {
-    if (event) this.returnDate = moment(event.value);
+    if (event) this.returnDate = new Date(event.value);
   }
 
   setSolicitationDate(event: any) {
-    if (event) this.solicitationDate = moment(event.value);
+    if (event) this.solicitationDate = new Date(event.value);
   }
 
   formatMoney(money: number | null): string {
@@ -251,9 +364,110 @@ export class AppComponent {
         await this.activityProgramation?.arrayBuffer();
     }
   }
+  clear() {
+    localStorage.clear();
+    this.toastr.success('', 'Dados limpos!', {
+      enableHtml: true,
+      tapToDismiss: true,
+      toastComponent: NotyfToast,
+      toastClass: 'notyf confirm',
+    });
+  }
+  async save() {
+    if (this.selectedSession?.trim())
+      localStorage.setItem('selected_session', this.selectedSession);
 
-  save() {}
+    if (this.responsible?.trim())
+      localStorage.setItem('responsible', this.responsible);
 
+    if (this.selectedActivityType?.trim())
+      localStorage.setItem('selected_activity_type', this.selectedActivityType);
+
+    if (this.objective?.trim())
+      localStorage.setItem('objective', this.objective);
+
+    if (this.placeName?.trim())
+      localStorage.setItem('place_name', this.placeName);
+
+    if (this.address?.trim()) localStorage.setItem('address', this.address);
+
+    if (this.outDate) {
+      let date: Date = this.outDate;
+      localStorage.setItem('out_date', date.toString());
+    }
+
+    if (this.outTransportation?.trim())
+      localStorage.setItem('out_transportation', this.outTransportation);
+
+    if (this.outHour?.trim()) localStorage.setItem('out_hour', this.outHour);
+
+    if (this.returnDate) {
+      let date: Date = this.returnDate;
+      localStorage.setItem('return_date', date.toString());
+    }
+
+    if (this.returnHour?.trim())
+      localStorage.setItem('return_hour', this.returnHour);
+
+    if (this.returnTransportation?.trim())
+      localStorage.setItem('return_transportation', this.returnTransportation);
+
+    if (this.participantsNumber > 0)
+      localStorage.setItem(
+        'participants_number',
+        this.participantsNumber.toString()
+      );
+
+    if (this.leaders && this.leaders.length > 0)
+      localStorage.setItem('leaders', JSON.stringify(this.leaders));
+
+    if (this.supports && this.supports.length > 0)
+      localStorage.setItem('supports', JSON.stringify(this.supports));
+
+    if (this.solicitationDate) {
+      let date: Date = this.solicitationDate;
+      localStorage.setItem('solicitation_date', date.toString());
+    }
+
+    if (this.taxes && this.taxes > 0) {
+      localStorage.setItem('taxes', this.taxes.toString());
+    }
+
+    if (this.notes) {
+      localStorage.setItem('notes', this.notes);
+    }
+
+    if (this.takeFood) {
+      localStorage.setItem('take_food', this.takeFood ? 'true' : 'false');
+    }
+
+    if (this.activityProgramation) {
+      let base64: string = await this.convertToBase64(
+        this.activityProgramation
+      );
+      localStorage.setItem('activity_programation', base64);
+    }
+
+    this.toastr.success('', 'Dados armazenados!', {
+      enableHtml: true,
+      tapToDismiss: true,
+      toastComponent: NotyfToast,
+      toastClass: 'notyf confirm',
+    });
+  }
+  convertToBase64(file: File): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result?.toString());
+      reader.onerror = (error) => reject(error);
+    });
+  }
+  async base64ToFile(base64: string): Promise<File> {
+    const res = await fetch(base64);
+    const buf = await res.arrayBuffer();
+    return new File([buf], 'solicitação.pdf', { type: 'application/pdf' });
+  }
   mobileCheck() {
     let check = false;
     (function (a) {
@@ -310,8 +524,8 @@ export class AppComponent {
           link.download = fileName;
           link.click();
           this.print = false;
-          this.downloadMessage.fire().then(data =>{
-            if(data.isConfirmed){
+          this.downloadMessage.fire().then((data) => {
+            if (data.isConfirmed) {
               window.location.reload();
             }
           });
