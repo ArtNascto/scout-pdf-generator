@@ -9,10 +9,11 @@ import html2canvas from 'html2canvas';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
-import { PDFDocument, PDFPage } from 'pdf-lib';
+import { PDFDocument, PDFPage, StandardFonts, rgb } from 'pdf-lib';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { NotyfToast } from './notyf.toast';
+import { ShepherdService } from 'angular-shepherd';
 
 @Component({
   selector: 'app-root',
@@ -191,7 +192,7 @@ export class AppComponent {
 
   activityProgramation: File | null = null;
   activityProgramationBuffer: any;
-
+  demonstrate = false;
   solicitationDate: Date | null = null;
 
   print: boolean = true;
@@ -199,7 +200,637 @@ export class AppComponent {
   @ViewChild('downloadMessage')
   downloadMessage!: SwalComponent;
 
-  constructor(private _cdr: ChangeDetectorRef, private toastr: ToastrService) {}
+  defaultStepOptions = [
+    {
+      id: 'intro',
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      title: 'Bem vindo ao gerador de documentações Irapuã',
+      text: [
+        `Esta é uma pagina simples para realizarmos a construção de documentos, os quais serão encaminhados para a diretoria.
+        <br><br>
+        No momento só esta funcionando para computador. Desculpe pelo inconveniente :(`,
+      ],
+    },
+    {
+      id: 'step two',
+      attachTo: {
+        element: '#initial_data',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Dados iniciais',
+      text: [
+        `Estes são os dados iniciais, nele será incluido os dados que resumem a atividade.
+        <br>
+        `,
+      ],
+    },
+    {
+      id: 'step two - select',
+      attachTo: {
+        element: '#activityType',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Campos de seleção',
+      text: [
+        `Este é um campo de seleção, nele é possivel realizar pesquisas.<br>
+        Assim fica mais facil de encontrar que tipo de atividade ou transporte procura
+        `,
+      ],
+    },
+    {
+      id: 'step three',
+      attachTo: {
+        element: '#date_form',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Datas de chegada e saida',
+      text: [
+        `Este espaço é para inserir as informações de data
+        `,
+      ],
+    },
+    {
+      id: 'step three - date',
+      attachTo: {
+        element: '#date_input',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Campo de data',
+      text: [
+        `Este é um campo de seleção de data.<br><br>
+        Alem de conseguirmos escrever a data nele é possivel, quando clicamos no calendariozinho, <br>
+        abrir um calendario para facilitar a escolha da data.
+        `,
+      ],
+    },
+    {
+      id: 'step three - hour',
+      attachTo: {
+        element: '#hour_input',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Campo de hora',
+      text: [
+        `Este é um campo de inserção de hora.<br>
+        Nele é possivel apenas inserir o horario escolhido
+        `,
+      ],
+    },
+    {
+      id: 'step four',
+      attachTo: {
+        element: '#participantsNumber',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Número de participantes',
+      text: [
+        `Neste campo devemos informar quantas pessoas participarão da atividade proposta.<br>
+        `,
+      ],
+    },
+    {
+      id: 'step five - leader input',
+      attachTo: {
+        element: '#leader_input',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Lista de chefes',
+      text: [
+        `Neste espaço adicionaremos os chefes que participarão da atividade.<br>
+        `,
+      ],
+    },
+    {
+      id: 'step five - leader input name',
+      attachTo: {
+        element: '#leader_input_name',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `Escrevemos o nome do chefe aqui.<br>
+        `,
+      ],
+    },
+    {
+      id: 'step five - leader add name',
+      attachTo: {
+        element: '#leader_add_name',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `E aqui clicamos para o nome aparecer na lista ao lado.<br>
+        `,
+      ],
+    },
+    {
+      id: 'step six',
+      attachTo: {
+        element: '#support_form',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      title: 'Lista de apoios',
+      text: [
+        `A lista de apoios funciona da mesma forma.<br>
+        Só escrever e adicionar o nome das pessoas que estarão apoiando a atividade
+        `,
+      ],
+    },
+    {
+      id: 'step seven',
+      attachTo: {
+        element: '#infos',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `As informações de Taxa, lanche para primeira refeição e observações devem ser inseridas aqui
+        `,
+      ],
+    },
+    {
+      id: 'step seven',
+      attachTo: {
+        element: '#program_input',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `Aqui é possivel adicionar a programação da atividade, gerada no paxtu.<br>
+         Ao gerar a solicitação de atividade, a programação será adicionada no mesmo PDF.
+        `,
+      ],
+    },
+    {
+      id: 'step eight',
+      attachTo: {
+        element: '#solicitationDate',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `Por fim, a data que a solicitação será encaminada para a diretoria
+        `,
+      ],
+    },
+    {
+      id: 'step nine',
+      attachTo: {
+        element: '#form_save_buttons',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `É possivel salvar para continuar depois.<br>
+        <b>ATENÇÃO:</b> As informações são armazenadas localmente. Ou seja, só será possivel continuar na mesma maquina que foi salvo.
+        `,
+      ],
+      when: {
+        show: () => {
+          this.demonstrate = false;
+        },
+        hide: () => {
+          this.demonstrate = false;
+        },
+      },
+    },
+    {
+      id: 'step ten',
+      attachTo: {
+        element: '#btn_generate_pdf',
+        on: 'auto',
+      },
+      buttons: [
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+          action: () => {
+            this.demonstrate = false;
+          },
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Próximo',
+          type: 'next',
+          action: () => {
+            this.demonstrate = false;
+          },
+        },
+      ],
+      cancelIcon: {
+        enabled: false,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `Somente quando este botão estiver apresentando a cor <b style="color:rgb(25,135,84)">Verde</b> será possivel criar o arquivo.<br>
+        Ou seja, quando todos os campos marcados com <b>*</b> serem preenchidos
+        `,
+      ],
+      when: {
+        show: () => {
+          this.demonstrate = true;
+        },
+        hide: () => {
+          console.log('fechar');
+          this.demonstrate = false;
+          this._cdr.detectChanges();
+        },
+      },
+    },
+    {
+      id: 'step eleven',
+      buttons: [
+        {
+          classes: 'btn btn-primary',
+          text: 'Fechar',
+          type: 'cancel',
+        },
+        {
+          classes: 'btn btn-info',
+          text: 'Voltar',
+          type: 'back',
+        },
+      ],
+      cancelIcon: {
+        enabled: true,
+      },
+      classes: 'text-center',
+      highlightClass: 'highlight',
+      scrollTo: { behavior: 'smooth', block: 'center' },
+      text: [
+        `Em caso de duvidas é só entrar em contato pelo WhatsApp!<br>
+        <br>
+        <b>SAPS</b>
+        `,
+      ],
+      when: {
+        show: () => {
+          this.demonstrate = false;
+        },
+        hide: () => {
+          this.demonstrate = false;
+        },
+      },
+    },
+  ];
+
+  constructor(
+    private _cdr: ChangeDetectorRef,
+    private toastr: ToastrService,
+    private shepherdService: ShepherdService
+  ) {}
+
+  ngAfterViewInit() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.shepherdService.defaultStepOptions = this.defaultStepOptions;
+    this.shepherdService.modal = true;
+    this.shepherdService.confirmCancel = false;
+    this.shepherdService.addSteps(this.defaultStepOptions);
+    this.shepherdService.start();
+    this.shepherdService.onTourFinish('complete');
+  }
 
   ngOnInit(): void {
     this.activitiesList.forEach((activity) => {
@@ -513,6 +1144,42 @@ export class AppComponent {
     })(navigator.userAgent || navigator.vendor);
     return check;
   }
+  validateOutHour() {
+    if (this.outHour.length >= 5) {
+      let hour = '00';
+      let minute = '00';
+      const split = this.outHour.split(':');
+      if (split[0] != null && Number.parseInt(split[0]) > 24) {
+        hour = '24';
+      } else {
+        hour = split[0];
+      }
+      if (split[1] != null && Number.parseInt(split[1]) > 59) {
+        hour = '59';
+      } else {
+        minute = split[1];
+      }
+      this.outHour = `${hour}:${minute}`;
+    }
+  }
+  validateReturnHour() {
+    if (this.returnHour.length >= 5) {
+      let hour = '00';
+      let minute = '00';
+      const split = this.returnHour.split(':');
+      if (split[0] != null && Number.parseInt(split[0]) > 24) {
+        hour = '24';
+      } else {
+        hour = split[0];
+      }
+      if (split[1] != null && Number.parseInt(split[1]) > 59) {
+        hour = '59';
+      } else {
+        minute = split[1];
+      }
+      this.returnHour = `${hour}:${minute}`;
+    }
+  }
 
   generatePDF(): void {
     if (this.verifyData()) {
@@ -594,6 +1261,10 @@ export class AppComponent {
   }
 
   verifyData(): boolean {
+    // return true;
+    if (this.demonstrate) {
+      return true;
+    }
     return (
       this.selectedSession?.trim() != '' &&
       this.responsible?.trim() != '' &&
