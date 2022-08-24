@@ -823,6 +823,8 @@ export class AppComponent {
   ) {}
 
   ngAfterViewInit() {
+    if(!this.desktop) return;
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.shepherdService.defaultStepOptions = this.defaultStepOptions;
     this.shepherdService.modal = true;
