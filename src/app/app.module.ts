@@ -27,6 +27,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ToastrModule } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { BlockUIModule } from 'primeng/blockui';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -53,6 +54,7 @@ import { CommonModule } from '@angular/common';
     MatNativeDateModule,
     InputMaskModule,
     MatCheckboxModule,
+    BlockUIModule,
     SweetAlert2Module.forRoot(),
     CommonModule,
     ToastrModule.forRoot({

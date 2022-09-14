@@ -8,8 +8,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
-import * as moment from 'moment';
-import { PDFDocument, PDFPage, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PDFPage } from 'pdf-lib';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { NotyfToast } from './notyf.toast';
@@ -25,6 +24,7 @@ export class AppComponent {
   supportDataSource = new MatTableDataSource<SelectDto>();
   desktop: boolean = true;
   @ViewChild('invoice') invoiceElement!: ElementRef;
+  loading: boolean = false;
   eventType: Array<string> = [
     'Acampamento',
     'Acantonamento',
@@ -823,7 +823,7 @@ export class AppComponent {
   ) {}
 
   ngAfterViewInit() {
-    if(!this.desktop) return;
+    if (!this.desktop) return;
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.shepherdService.defaultStepOptions = this.defaultStepOptions;
@@ -1185,6 +1185,7 @@ export class AppComponent {
 
   generatePDF(): void {
     if (this.verifyData()) {
+      this.loading = true;
       this.print = true;
 
       this._cdr.detectChanges();
@@ -1213,16 +1214,20 @@ export class AppComponent {
           PDF.html(this.invoiceElement.nativeElement.innerHTML);
           const solicitation = PDF.output('arraybuffer');
           // PDF.save(fileName)
-          const merged = await this.mergePdfs([
-            solicitation,
-            this.activityProgramationBuffer,
-          ]);
+          let merged = await this.mergePdfs([solicitation]);
+          if (this.activityProgramationBuffer) {
+            merged = await this.mergePdfs([
+              solicitation,
+              this.activityProgramationBuffer,
+            ]);
+          }
           var blob = new Blob([merged], { type: 'application/pdf' });
           var link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
           link.download = fileName;
           link.click();
           this.print = false;
+          this.loading = false;
           this.downloadMessage.fire().then((data) => {
             if (data.isConfirmed) {
               window.location.reload();

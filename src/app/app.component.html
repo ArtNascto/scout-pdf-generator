@@ -1,3 +1,6 @@
+<p-blockUI [blocked]="loading">
+  <i class="pi pi-spin pi-spinner" style="font-size: 10rem; color: #ffffff"></i>
+</p-blockUI>
 <div class="container" id="form_data" *ngIf="desktop">
   <div class="m-5 col-xl-12 col-md-12 col-sm-12 border-dark">
     <mat-card id="template_form">
@@ -427,6 +430,7 @@
   </div>
 </div>
 <div class="container" *ngIf="desktop">
+  <h5 class="display-5">Pré Visualização</h5>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" id="invoice" #invoice>
     <div class="row">
       <div class="container col-md-3 text-center">
