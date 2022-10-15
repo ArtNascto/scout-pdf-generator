@@ -174,7 +174,7 @@ export class AppComponent {
   faPlus = faPlus;
   leaders: Array<SelectDto> = [];
   supports: Array<SelectDto> = [];
-  selectedSession: string = '  ';
+  selectedSession: string = '';
   responsible: string = '';
   selectedActivityType: any;
   displayedLeadersColumns: string[] = ['Nome'];
@@ -186,7 +186,7 @@ export class AppComponent {
   returnDate: Date | null = null;
   returnHour: string = '';
   returnTransportation: string = '';
-  taxes: number | null = null;
+  taxes: number = 0;
   takeFood: boolean = false;
   notes: string = '';
 
@@ -1021,7 +1021,7 @@ export class AppComponent {
     this.returnDate = null;
     this.returnHour = '';
     this.returnTransportation = '';
-    this.taxes = null;
+    this.taxes = 0;
     this.takeFood = false;
     this.notes = '';
     this.activityProgramation = null;
@@ -1215,7 +1215,7 @@ export class AppComponent {
           const solicitation = PDF.output('arraybuffer');
           // PDF.save(fileName)
           let merged = await this.mergePdfs([solicitation]);
-          if (this.activityProgramationBuffer) {
+          if (this.activityProgramationBuffer && this.activityProgramationBuffer != undefined) {
             merged = await this.mergePdfs([
               solicitation,
               this.activityProgramationBuffer,
