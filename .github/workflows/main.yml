@@ -21,6 +21,6 @@ jobs:
       - name: Tag image
         run:
           docker tag kreati/scout-pdf-generator \
-          registry.digitalocean.com/kreati/scout-pdf-generator:${{job.id }}
+          registry.digitalocean.com/kreati/scout-pdf-generator:${{github.job.id }}
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/kreati/scout-pdf-generator:${{job.id}}
+        run: docker push registry.digitalocean.com/kreati/scout-pdf-generator:${{github.job.id}}
