@@ -1,8 +1,7 @@
 FROM node:latest AS build
 WORKDIR /dist/src/app
-RUN npm cache clean --force
-COPY package*.json .
-COPY yarn* .
+COPY package*.json /dist/src/app/
+COPY yarn* /dist/src/app/
 RUN yarn
 COPY . .
 RUN yarn build
