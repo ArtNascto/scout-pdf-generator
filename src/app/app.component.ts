@@ -1,23 +1,18 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { PDFDocument, PDFPage } from 'pdf-lib';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { NotyfToast } from './notyf.toast';
 import { ShepherdService } from 'angular-shepherd';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { PDFDocument, PDFPage } from 'pdf-lib';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   leaderDataSource = new MatTableDataSource<SelectDto>();
@@ -200,7 +195,7 @@ export class AppComponent {
   @ViewChild('downloadMessage')
   downloadMessage!: SwalComponent;
 
-  defaultStepOptions = [
+  defaultStepOptions: any = [
     {
       id: 'intro',
       buttons: [
@@ -820,7 +815,7 @@ export class AppComponent {
     private _cdr: ChangeDetectorRef,
     private toastr: ToastrService,
     private shepherdService: ShepherdService
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     if (!this.desktop) return;

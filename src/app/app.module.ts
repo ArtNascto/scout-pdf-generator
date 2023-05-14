@@ -28,11 +28,17 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ToastrModule } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { BlockUIModule } from 'primeng/blockui';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    FontAwesomeModule,
+    NgbModule,
     MatCardModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -45,8 +51,6 @@ import { BlockUIModule } from 'primeng/blockui';
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
-    BrowserAnimationsModule,
-    NgbModule,
     MatDividerModule,
     NgSelectModule,
     FormsModule,
@@ -67,7 +71,6 @@ import { BlockUIModule } from 'primeng/blockui';
     }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
-
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -408,6 +408,7 @@
                 color="primary"
                 mat-stroked-button
                 mat-raised-button
+                style="color: white"
               >
                 Guardar informações
               </button>
@@ -652,7 +653,7 @@
                   class="new-roman"
                   style="text-decoration: underline; display: inline-block"
                 >
-                  {{ outDate | date: "dd/MM/yyyy" }}
+                  {{ outDate | date : "dd/MM/yyyy" }}
                 </h3>
               </div>
               <div class="col-md-4">
@@ -696,7 +697,7 @@
                   class="new-roman"
                   style="text-decoration: underline; display: inline-block"
                 >
-                  {{ returnDate | date: "dd/MM/yyyy" }}
+                  {{ returnDate | date : "dd/MM/yyyy" }}
                 </h3>
               </div>
               <div class="col-md-4">
@@ -837,7 +838,7 @@
               class="new-roman"
               style="text-decoration: underline; display: inline-block"
             >
-              {{ solicitationDate | date: "dd/MM/yyyy" }}
+              {{ solicitationDate | date : "dd/MM/yyyy" }}
             </h3>
           </div>
           <div class="col-md-8 float-end">
