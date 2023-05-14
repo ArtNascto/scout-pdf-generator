@@ -18,9 +18,11 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Log in to DO Container Registry
         run: doctl registry login --expiry-seconds 600
-      - name: Tag image
-        run:
-          docker tag kreati/scout-pdf-generator \
-          registry.digitalocean.com/kreati/scout-pdf-generator:${{github.run_id }}
-      - name: Push image to DO Container Registry
+      - name: Tag image ID
+        run: docker tag kreati/scout-pdf-generator registry.digitalocean.com/kreati/scout-pdf-generator:${{github.run_id }}
+      - name: Tag image Latest
+        run: docker tag kreati/scout-pdf-generator registry.digitalocean.com/kreati/scout-pdf-generator:latest
+      - name: Push image to DO Container Registry ID
         run: docker push registry.digitalocean.com/kreati/scout-pdf-generator:${{github.run_id}}
+      - name: Push image to DO Container Registry latest
+        run: docker push registry.digitalocean.com/kreati/scout-pdf-generator:latest
